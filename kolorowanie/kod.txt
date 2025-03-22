@@ -1,0 +1,7 @@
+definiuj suma(a, b):
+    zwróć a + b
+
+jeśli suma(2, 3) > 4:
+    wypisz("Większe niż cztery!")
+inaczej:
+    wypisz("Mniejsze lub równe cztery!")
