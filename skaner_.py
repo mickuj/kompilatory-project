@@ -1,63 +1,54 @@
-def skaner(tekst):
+def skaner(tekst, token, pozycja):
+    if token.isdigit():
+        start = pozycja
+        while pozycja < len(tekst) and tekst[pozycja].isdigit():
+            pozycja += 1
+        return ("liczba", tekst[start:pozycja], start, pozycja)
+
+    if token.isalpha() or token == "_":
+        start = pozycja
+        while pozycja < len(tekst) and (tekst[pozycja].isalnum() or tekst[pozycja] == "_"):
+            pozycja += 1
+        return ("id", tekst[start:pozycja], start, pozycja)
+
+    if token == "+":
+        return ("dodawanie", token, pozycja, pozycja+1)
+
+    if token == "-":
+        return ("odejmowanie", token, pozycja, pozycja+1)
+
+    if token == "*":
+        return ("mnożenie", token, pozycja, pozycja+1)
+
+    if token == "/":
+        return ("dzielenie", token, pozycja, pozycja+1)
+
+    if token == "(":
+        return ("lewy nawias", token, pozycja, pozycja+1)
+
+    if token == ")":
+        return ("prawy nawias", token, pozycja, pozycja+1)
+
+    else:
+        return ("błąd", token, pozycja, pozycja+1)
+
+def main():
+    tekst = input("Wpisz wyrażenie do analizy: ")
     pozycja = 0
     dlugosc = len(tekst)
-
+    
     while pozycja < dlugosc:
         znak = tekst[pozycja]
         if znak.isspace():
             pozycja += 1
             continue
+        
+        kod, wartosc, start, koniec = skaner(tekst, znak, pozycja)
+        
+        if kod != "błąd":
+            print(kod, wartosc, start)
+            
+        pozycja = koniec
 
-        if znak.isdigit():
-            start = pozycja
-            while pozycja < dlugosc and tekst[pozycja].isdigit():
-                pozycja += 1
-            yield ("liczba", tekst[start:pozycja], start)
-            continue
-
-        if znak.isalpha() or znak == "_":
-            start = pozycja
-            while pozycja < dlugosc and (tekst[pozycja].isalnum() or tekst[pozycja] == "_"):
-                pozycja += 1
-            yield ("id", tekst[start:pozycja], start)
-            continue
-
-        if znak in "+":
-            yield ("dodawanie", znak, pozycja)
-            pozycja += 1
-            continue
-
-        if znak in "-":
-            yield ("odejmowanie", znak, pozycja)
-            pozycja += 1
-            continue
-
-        if znak in "*":
-            yield ("mnożenie", znak, pozycja)
-            pozycja += 1
-            continue
-
-        if znak in "/":
-            yield ("dzielenie", znak, pozycja)
-            pozycja += 1
-            continue
-
-        if znak in "(":
-            yield ("lewy nawias", znak, pozycja)
-            pozycja += 1
-            continue
-
-        if znak in ")":
-            yield ("prawy nawias", znak, pozycja)
-            pozycja += 1
-            continue
-
-        else:
-            yield ("błąd", znak, pozycja)
-            pozycja += 1
-
-tekst = input("Wpisz wyrażenie do analizy: ")
-wynik = skaner(tekst)
-
-for tokeny in wynik:
-    print(tokeny)
+if __name__ == "__main__":
+    main()
